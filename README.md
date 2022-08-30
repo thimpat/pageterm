@@ -12,6 +12,14 @@ npm install pageterm -g
 
 ---
 
+## Demo
+
+![PageTerm Demo](https://github.com/thimpat/pageterm/blob/main/documentation/images/pageterm-demo.gif)
+
+<br/>
+
+---
+
 ## Usage
 
 ```shell
