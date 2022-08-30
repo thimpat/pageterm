@@ -2,9 +2,9 @@
   "name": "pageterm",
   "version": "1.0.0",
   "description": "Display help in a terminal",
-  "main": "./cjs/index.cjs",
+  "main": "cjs/index.cjs",
   "bin": {
-    "pageterm": "cjs/index.cjs"
+    "pageterm": "cli.cjs"
   },
   "scripts": {
     "build:esm": "to-esm cjs/index.cjs --output esm/ --subRootDir cjs --update-all --keep-external",
@@ -29,6 +29,7 @@
   "homepage": "https://github.com/thimpat/pageterm#readme",
   "dependencies": {
     "@thimpat/libutils": "^1.5.1",
+    "commander": "^9.4.0",
     "term-size": "^3.0.2",
     "to-ansi": "^1.4.3",
     "window-size": "^1.1.1"
