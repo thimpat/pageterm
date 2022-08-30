@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "description": "Display help in a terminal",
   "main": "./cjs/index.cjs",
+  "bin": {
+    "pageterm": "cjs/index.cjs"
+  },
   "scripts": {
-    "build:esm": "to-esm cjs/index.cjs --output esm/ --target esm --subRootDir cjs"
+    "build:esm": "to-esm cjs/index.cjs --output esm/ --subRootDir cjs --update-all --keep-external",
+    "build:demo": "to-esm demo/demo.cjs --output demo/ --subRootDir demo --keep-external",
+    "run:demo": "demo/demo.cjs"
   },
   "repository": {
     "type": "git",
@@ -29,6 +34,12 @@
     "window-size": "^1.1.1"
   },
   "devDependencies": {
+    "marked": "^4.1.0",
+    "marked-terminal": "^5.1.1",
     "to-esm": "^2.19.0"
+  },
+  "exports": {
+    "require": "./cjs/index.cjs",
+    "import": "./esm/index.mjs"
   }
 }
