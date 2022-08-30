@@ -30,13 +30,13 @@
   "dependencies": {
     "@thimpat/libutils": "^1.5.1",
     "commander": "^9.4.0",
+    "marked": "^4.1.0",
+    "marked-terminal": "^5.1.1",
     "term-size": "^3.0.2",
     "to-ansi": "^1.4.3",
     "window-size": "^1.1.1"
   },
   "devDependencies": {
-    "marked": "^4.1.0",
-    "marked-terminal": "^5.1.1",
     "to-esm": "^2.19.0"
   },
   "exports": {
