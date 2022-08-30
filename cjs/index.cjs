@@ -1,28 +1,21 @@
-
-let getTerminalHeight;
-
-/** to-esm-all: remove **/
 const {sleep} = require("@thimpat/libutils");
 const toAnsi = require("to-ansi");
-const terminalSize = require("window-size");
-getTerminalHeight = () =>
+
+/** to-esm-all: remove **/
+let terminalSize = require("window-size");
+const getTerminalHeight = () =>
 {
     return terminalSize.get().height;
 };
 /** to-esm-all: end-remove **/
 
-/** to-esm-esm: add
-import terminalSize from 'term-size';
-import {sleep}  from "@thimpat/libutils";
-import toAnsi  from "to-ansi";
-
- getTerminalHeight = () =>
- {
-    return terminalSize().rows
-};
- **/
 
 let helpLines = [];
+
+// FIXME: Fix bug in to-esm
+// to-esm-add not working
+// import terminalSize from 'term-size';
+
 let indexLine = 0;
 let maxLines = 0;
 let consoleTitle;
