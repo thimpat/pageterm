@@ -5,6 +5,11 @@ const getTerminalHeight = () =>
 {
     return terminalSize().rows
 };
+
+const getTerminalWidth = () =>
+{
+    return terminalSize().cols
+};
 `
 
 module.exports = {
