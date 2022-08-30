@@ -1,0 +1,34 @@
+{
+  "name": "pageterm",
+  "version": "1.0.0",
+  "description": "Display help in a terminal",
+  "main": "./cjs/index.cjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thimpat/pageterm.git"
+  },
+  "keywords": [
+    "terminal",
+    "help",
+    "display",
+    "term"
+  ],
+  "author": "Patrice Thimothee",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thimpat/pageterm/issues"
+  },
+  "homepage": "https://github.com/thimpat/pageterm#readme",
+  "dependencies": {
+    "@thimpat/libutils": "^1.5.1",
+    "term-size": "^3.0.2",
+    "to-ansi": "^1.4.3",
+    "window-size": "^1.1.1"
+  },
+  "devDependencies": {
+    "to-esm": "^2.19.0"
+  }
+}
