@@ -22,9 +22,50 @@ npm install pageterm -g
 
 ## Usage
 
+
+#### CLI
+
 ```shell
 $> pageterm [options] <filepath>
 ```
+
+
+--
+#### Programmatically [CommonJs]
+
+
+
+```shell
+const {showHelp} = require("pageterm");
+```
+
+--
+#### Programmatically [ESM]
+
+```shell
+import {showHelp} from "pageterm";
+```
+
+---
+
+## Examples
+
+```shell
+const displayHelpFile = async function ()
+{
+    const content = fs.readFileSync("./my-help-file", "utf-8");
+    await showHelp(content, {
+        windowTitle: "My Application Name - Help ❔",
+        topText: "Press CTRL + C or Q to Quit | Page Down or Any key to scroll down",
+        topTextBg: "",
+        topTextReversed: true,
+        colorify: true
+    });
+};
+
+```
+
+**filepath**                      File path to content to show
 
 <br/>
 
