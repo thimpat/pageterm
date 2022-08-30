@@ -72,3 +72,4 @@ dist
 /.run/
 /.to-esm.cjs
 /demo/
+/documentation/
