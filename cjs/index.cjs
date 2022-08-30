@@ -1,11 +1,21 @@
 const {sleep} = require("@thimpat/libutils");
 const toAnsi = require("to-ansi");
 
+const { marked } = require("marked");
+const TerminalRenderer = require("marked-terminal");
+
+
 /** to-esm-all: remove **/
 let terminalSize = require("window-size");
+const fs = require("fs");
 const getTerminalHeight = () =>
 {
     return terminalSize.get().height;
+};
+
+const getTerminalWidth = () =>
+{
+    return terminalSize.get().width;
 };
 /** to-esm-all: end-remove **/
 
@@ -25,6 +35,23 @@ let viewPort = {
     end: 0
 };
 
+const someColors = [
+    "#3A01DF",
+    "#40FF00",
+    "#1a6981",
+    "#8d8a43",
+]
+
+/**
+ * Wrap text
+ * https://stackoverflow.com/questions/14484787/wrap-text-in-javascript
+ * @param str
+ * @param maxChars
+ * @returns {*}
+ */
+const wrap = (str, maxChars) => str.replace(
+    new RegExp(`(?![^\\n]{1,${maxChars}}$)([^\\n]{1,${maxChars}})\\s`, 'g'), '$1\n'
+);
 
 const closeHelp = () =>
 {
@@ -134,6 +161,7 @@ const grabKey = () =>
         stdin.on("data", async function (key)
         {
             const keyname = "" + key;
+            const terminalHeight = getTerminalHeight()
 
             // CTRL-C
             if (keyname === "\u0003")
@@ -148,7 +176,7 @@ const grabKey = () =>
             // PAGE DOWN
             else if (keyname === "\u001B\u005B\u0036\u007E")
             {
-                await displayTextRangeSmooth(indexLine + 1, _terminalSize.height);
+                await displayTextRangeSmooth(indexLine + 1, terminalHeight);
                 return;
             }
 
@@ -172,6 +200,59 @@ const grabKey = () =>
     return false;
 };
 
+const colorText = (arr) =>
+{
+    let emptyLineCounter = 0;
+    let counter = 0
+    for (let i = 0; i < arr.length; ++i)
+    {
+        counter = counter % someColors.length
+        const fg = someColors[counter]
+
+        const textLine = arr[i]
+
+        if (!textLine.trim())
+        {
+            ++emptyLineCounter
+        }
+        else {
+            emptyLineCounter = 0
+        }
+
+        if (emptyLineCounter >= 1)
+        {
+            ++counter
+            emptyLineCounter = 0
+        }
+
+        arr[i] = toAnsi.getTextFromHex(textLine, {
+            fg,
+        });
+
+    }
+
+    return arr
+}
+
+const colorMarkdown = (content, {fg = "yellow"} = {}) =>
+{
+    const helpOptions = {
+        code             : (text) => toAnsi.getTextFromColor(text, {fg: "yellow"}),
+        showSectionPrefix: true,
+        unescape         : true,
+        emoji            : true,
+        tableOptions     : {},
+        tab              : 2
+    };
+    marked.setOptions({
+        // Define custom renderer
+        renderer: new TerminalRenderer(helpOptions)
+    });
+    content = marked(content);
+
+    return content
+}
+
 /**
  *
  * @returns {Promise<void>}
@@ -183,12 +264,15 @@ const grabKey = () =>
  */
 const showHelp = async (content, {
     windowTitle = "❔" + " Help ",
+    markdownTextColor = "yellow",
     topText = "",
     topTextBg = "#00FF00",
     topTextFg = "#006655",
     topTextBold = true,
     topTextUnderline = false,
-    topTextReversed = false
+    topTextReversed = false,
+    colorify = false,
+    markdown = false
 
 } = {}) =>
 {
@@ -205,13 +289,27 @@ const showHelp = async (content, {
             isReversed : topTextReversed
         });
 
-        content = topText + content;
+        content = topText + "\n" + content;
     }
+
+    const terminalHeight = getTerminalHeight();
+    const terminalWidth = getTerminalWidth();
+
+    if (markdown)
+    {
+        content = colorMarkdown(content, {fg: markdownTextColor})
+    }
+
+    content = wrap(content, terminalWidth);
 
     helpLines = content.split("\n");
     maxLines = helpLines.length;
 
-    const terminalHeight = getTerminalHeight();
+    if (colorify)
+    {
+        colorText(helpLines)
+    }
+
     process.stdout.write(toAnsi.RESET);
     await displayTextRangeSmooth(0, terminalHeight, {smooth: false});
 
