@@ -4,10 +4,14 @@
  * @see [./cjs/index.cjs]{@link ./cjs/index.cjs}
  * 
  **/
+import fs  from "fs";
+import path  from "path";
 import {sleep}  from "@thimpat/libutils";
 import toAnsi  from "to-ansi";
-import { marked }  from "marked";
+import {marked}  from "marked";
 import TerminalRenderer  from "marked-terminal";
+
+
 
 
 
@@ -32,18 +36,16 @@ const getTerminalWidth = () =>
 let indexLine = 0;
 let maxLines = 0;
 let consoleTitle;
+let progressBar;
+let smoothScrolling = true;
+let smoothScrollingLatency = 10;
 
 let viewPort = {
     start: 0,
-    end: 0
+    end  : 0
 };
 
-const someColors = [
-    "#3A01DF",
-    "#40FF00",
-    "#1a6981",
-    "#8d8a43",
-]
+let someColors = []
 
 /**
  * Wrap text
@@ -69,8 +71,12 @@ function setTerminalTitle(title)
     );
 }
 
-const displayPercentage = (percent) =>
+const displayProgressBar = (percent, showProgressBar = progressBar) =>
 {
+    if (!showProgressBar)
+    {
+        return
+    }
     const nb = Math.floor(percent / 10);
     const bar = Array.from(Array(nb).fill("◼")).join("");
     const box = "     [" + bar.padEnd(11, "◾") + "]";
@@ -106,7 +112,19 @@ const displayLineIndex = (index = indexLine, {lineNumber = false, update = true}
     {
         return;
     }
+
+    if (index >= helpLines.length - 1)
+    {
+        closeHelp()
+        return;
+    }
+
     const text = helpLines[index];
+    if (text === undefined)
+    {
+        closeHelp()
+        return;
+    }
 
     const nLine = lineNumber ? index + ": " : "";
     // process.stdout.write(nLine + text + toAnsi.RESET);
@@ -115,10 +133,14 @@ const displayLineIndex = (index = indexLine, {lineNumber = false, update = true}
     // process.stdout.write(index + ": " + text);
 
     update && setIndexLine(index);
+
+    const percent = Math.ceil(index / maxLines * 100);
+    displayProgressBar(percent);
+
     return index;
 };
 
-const displayTextRangeSmooth = async (start, end, {smooth = true, lineNumber = false} = {}) =>
+const displayTextRangeSmooth = async (start, end, {smooth = smoothScrolling, lineNumber = false} = {}) =>
 {
     let isEnd = false;
     let limit = indexLine + end;
@@ -130,13 +152,10 @@ const displayTextRangeSmooth = async (start, end, {smooth = true, lineNumber = f
 
     for (let i = start; i < limit; ++i)
     {
-        smooth && await sleep(10);
+        smooth && await sleep(smoothScrollingLatency);
         process.stdout.write("\n");
 
         displayLineIndex(i, {lineNumber});
-
-        const percent = Math.ceil(i / maxLines * 100);
-        displayPercentage(percent);
     }
 
     if (isEnd)
@@ -168,6 +187,11 @@ const grabKey = () =>
 
             // CTRL-C
             if (keyname === "\u0003")
+            {
+                closeHelp();
+            }
+            // ESC
+            else if (keyname === "\u001B")
             {
                 closeHelp();
             }
@@ -218,7 +242,8 @@ const colorText = (arr) =>
         {
             ++emptyLineCounter
         }
-        else {
+        else
+        {
             emptyLineCounter = 0
         }
 
@@ -237,6 +262,22 @@ const colorText = (arr) =>
     return arr
 }
 
+const customMarkdown = (text) =>
+{
+    try
+    {
+        text = text.replace(/## /gm, "");
+        text = text.replaceAll("\n\n\n", "\n");
+        text = text.replace(/---[ -]+/gm, "-".padEnd(20, "-"));
+        text = text.replaceAll(/<br.>/g, "\n");
+    }
+    catch (e)
+    {
+    }
+
+    return text;
+}
+
 const colorMarkdown = (content, {fg = "yellow"} = {}) =>
 {
     const helpOptions = {
@@ -251,6 +292,8 @@ const colorMarkdown = (content, {fg = "yellow"} = {}) =>
         // Define custom renderer
         renderer: new TerminalRenderer(helpOptions)
     });
+
+    content = customMarkdown(content);
     content = marked(content);
 
     return content
@@ -258,7 +301,7 @@ const colorMarkdown = (content, {fg = "yellow"} = {}) =>
 
 /**
  *
- * @returns {Promise<void>}
+ * @returns {Promise<boolean>}
  *
  * @example
  * $> genserve help
@@ -275,12 +318,44 @@ export const showHelp  = async (content, {
     topTextUnderline = false,
     topTextReversed = false,
     colorify = false,
-    markdown = false
+    markdown = true,
+    progress = true,
+    smooth = true,
+    latencyScroll = 10,
+    filepath = "",
+    colors = [
+        "#3A01DF",
+        "#40FF00",
+        "#1a6981",
+        "#8d8a43",
+    ]
 
 } = {}) =>
 {
+    progressBar = progress
+    smoothScrolling = smooth;
+    smoothScrollingLatency = latencyScroll;
+
     consoleTitle = windowTitle;
     setTerminalTitle(consoleTitle);
+
+    if (!content)
+    {
+        if (!filepath)
+        {
+            console.error(`No content to display`)
+            return false;
+        }
+
+        content = fs.readFileSync(filepath, {encoding: "utf-8"})
+        
+        const extension = path.extname(filepath)
+        
+        if (markdown && !["md", "markdown"].includes(extension))
+        {
+            markdown = false;
+        }
+    }
 
     if (topText)
     {
@@ -310,6 +385,7 @@ export const showHelp  = async (content, {
 
     if (colorify)
     {
+        someColors = colors
         colorText(helpLines)
     }
 
@@ -338,7 +414,7 @@ export const showHelp  = async (content, {
 //     }
 //     return unicodeString;
 // };
-//
+
 // function moveUp(nb = 1)
 // {
 //     for (let i = 0; i < nb; ++i)
