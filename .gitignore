@@ -69,3 +69,4 @@ dist
 .pnp.*
 /.run/
 /debug/
+/esm/
