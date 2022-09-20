@@ -8,25 +8,19 @@ const {marked} = require("marked");
 const TerminalRenderer = require("marked-terminal");
 
 
-/** to-esm-all: remove **/
-let terminalSize = require("window-size");
+const terminalSize = require("term-size-cjs");
 const getTerminalHeight = () =>
 {
-    return terminalSize.get().height;
+    return terminalSize().rows
 };
 
 const getTerminalWidth = () =>
 {
-    return terminalSize.get().width;
+    return terminalSize().cols
 };
-/** to-esm-all: end-remove **/
 
 
 let helpLines = [];
-
-// FIXME: Fix bug in to-esm
-// to-esm-add not working
-// import terminalSize from 'term-size';
 
 let indexLine = 0;
 let maxLines = 0;
@@ -343,9 +337,9 @@ const showHelp = async (content, {
         }
 
         content = fs.readFileSync(filepath, {encoding: "utf-8"})
-        
+
         const extension = path.extname(filepath)
-        
+
         if (markdown && !["md", "markdown"].includes(extension))
         {
             markdown = false;
@@ -365,8 +359,8 @@ const showHelp = async (content, {
         content = topText + "\n" + content;
     }
 
-    const terminalHeight = getTerminalHeight();
-    const terminalWidth = getTerminalWidth();
+    const terminalHeight = getTerminalHeight() || 20;
+    const terminalWidth = getTerminalWidth() || 80;
 
     if (markdown)
     {
