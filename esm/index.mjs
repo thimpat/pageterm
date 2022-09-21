@@ -10,18 +10,14 @@ import {sleep}  from "@thimpat/libutils";
 import toAnsi  from "to-ansi";
 import {marked}  from "marked";
 import TerminalRenderer  from "marked-terminal";
+import terminalSize  from "term-size";
 
 
 
 
 
 
-let helpLines = [];
 
-// FIXME: Fix bug in to-esm
-// to-esm-add not working
-
-import terminalSize from 'term-size';
 const getTerminalHeight = () =>
 {
     return terminalSize().rows
@@ -32,6 +28,8 @@ const getTerminalWidth = () =>
     return terminalSize().cols
 };
 
+
+let helpLines = [];
 
 let indexLine = 0;
 let maxLines = 0;
@@ -348,9 +346,9 @@ export const showHelp  = async (content, {
         }
 
         content = fs.readFileSync(filepath, {encoding: "utf-8"})
-        
+
         const extension = path.extname(filepath)
-        
+
         if (markdown && !["md", "markdown"].includes(extension))
         {
             markdown = false;
@@ -370,8 +368,8 @@ export const showHelp  = async (content, {
         content = topText + "\n" + content;
     }
 
-    const terminalHeight = getTerminalHeight();
-    const terminalWidth = getTerminalWidth();
+    const terminalHeight = getTerminalHeight() || 20;
+    const terminalWidth = getTerminalWidth() || 80;
 
     if (markdown)
     {
