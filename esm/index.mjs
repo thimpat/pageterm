@@ -355,7 +355,20 @@ export const showHelp  = async (content, {
         }
     }
 
-    if (topText)
+    const terminalHeight = getTerminalHeight() || 20;
+    const terminalWidth = getTerminalWidth() || 80;
+
+    if (markdown)
+    {
+        content = colorMarkdown(content, {fg: markdownTextColor})
+    }
+
+    let content0 = wrap(content, terminalWidth);
+
+    helpLines = content0.split("\n");
+    maxLines = helpLines.length;
+
+    if (topText && maxLines > terminalHeight)
     {
         topText = toAnsi.getTextFromHex(topText, {
             bg         : topTextBg,
@@ -366,14 +379,6 @@ export const showHelp  = async (content, {
         });
 
         content = topText + "\n" + content;
-    }
-
-    const terminalHeight = getTerminalHeight() || 20;
-    const terminalWidth = getTerminalWidth() || 80;
-
-    if (markdown)
-    {
-        content = colorMarkdown(content, {fg: markdownTextColor})
     }
 
     content = wrap(content, terminalWidth);
