@@ -99,12 +99,15 @@ $> pageterm <filepath>
 | --topText           | Change the top menu text                           |         |
 | -h, --help          | display help for command                           |         |
 
-                    
+
+<br/>                    
+
+---
 
 
 
 ## Changelog
 
-*  Don't display top text when console display is big enough
+*  Don't display top text when the console is big enough
 
 ---
