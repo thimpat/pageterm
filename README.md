@@ -101,3 +101,10 @@ $> pageterm <filepath>
 
                     
 
+
+
+## Changelog
+
+*  Don't display top text when console display is big enough
+
+---
