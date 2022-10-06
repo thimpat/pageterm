@@ -109,6 +109,11 @@ $> pageterm <filepath>
 ## Changelog
 
 ##### current:
+*  Display help with PageTerm
+*  Update code for the ESM file
+
+
+##### 1.0.5:
 *  Restore the initial color on quitting
 *  Display content left on quitting
 *  Fix lines wrapped incorrectly
