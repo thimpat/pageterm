@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build:esm": "to-esm cjs/index.cjs --output esm/ --update-all --keep-external",
-    "build:demo": "to-esm demo/demo.cjs --output demo/ --subRootDir demo --keep-external",
+    "build:demo": "to-esm demo/demo.cjs --output demo/ --keep-external",
     "run:demo": "demo/demo.cjs"
   },
   "repository": {
@@ -38,7 +38,7 @@
     "window-size": "^1.1.1"
   },
   "devDependencies": {
-    "to-esm": "^2.22.3"
+    "to-esm": "^2.24.0"
   },
   "exports": {
     "require": "./cjs/index.cjs",

@@ -1,4 +1,10 @@
 module.exports = {
+    replaceEnd  : [
+        {
+            search : `"../cjs/index.mjs"`,
+            replace: `"../esm/index.mjs"`
+        }
+    ],
     replaceModules: {
         "term-size": {
             cjs: {
