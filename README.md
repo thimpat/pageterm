@@ -102,9 +102,24 @@ $> pageterm <filepath>
 
 <br/>                    
 
+
 ---
 
+### Package
 
+```
+📁 package                
+│
+└───📁 cjs
+│   │ 📝 index.cjs               ⇽ CJS version      - Node (10k unminified)
+└───📁 dist
+│   │ 📝 index.mjs               ⇽ ESM version      - Node (10k unminified)
+
+```
+
+<br/>
+
+---
 
 ## Changelog
 
