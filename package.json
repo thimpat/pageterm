@@ -29,7 +29,7 @@
   "homepage": "https://github.com/thimpat/pageterm#readme",
   "dependencies": {
     "@thimpat/libutils": "^1.5.1",
-    "commander": "^9.4.0",
+    "commander": "^9.4.1",
     "marked": "^4.1.0",
     "marked-terminal": "^5.1.1",
     "term-size": "^3.0.2",
