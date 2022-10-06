@@ -25,7 +25,7 @@ const getTerminalHeight = () =>
 
 const getTerminalWidth = () =>
 {
-    return terminalSize().cols
+    return terminalSize().columns
 };
 
 
@@ -58,7 +58,8 @@ const wrap = (str, maxChars) => str.replace(
 
 const closeHelp = () =>
 {
-    process.stdout.write("\n\n");
+    process.stdout.write(toAnsi.RESET);
+    process.stdout.write("\n");
     process.exit();
 };
 
@@ -125,10 +126,7 @@ const displayLineIndex = (index = indexLine, {lineNumber = false, update = true}
     }
 
     const nLine = lineNumber ? index + ": " : "";
-    // process.stdout.write(nLine + text + toAnsi.RESET);
-    // process.stdout.write(toAnsi.RESET + nLine + text);
     process.stdout.write(nLine + text);
-    // process.stdout.write(index + ": " + text);
 
     update && setIndexLine(index);
 
@@ -138,6 +136,14 @@ const displayLineIndex = (index = indexLine, {lineNumber = false, update = true}
     return index;
 };
 
+/**
+ * Display lines of text between index = start to index = end
+ * @param start
+ * @param end
+ * @param smooth
+ * @param lineNumber
+ * @returns {Promise<number>}
+ */
 const displayTextRangeSmooth = async (start, end, {smooth = smoothScrolling, lineNumber = false} = {}) =>
 {
     let isEnd = false;
@@ -183,19 +189,10 @@ const grabKey = () =>
             const keyname = "" + key;
             const terminalHeight = getTerminalHeight()
 
-            // CTRL-C
-            if (keyname === "\u0003")
+            // CTRL-C || ESC || Q
+            if (keyname === "\u0003" || keyname === "\u001B" || keyname.toLowerCase() === "q")
             {
-                closeHelp();
-            }
-            // ESC
-            else if (keyname === "\u001B")
-            {
-                closeHelp();
-            }
-            // Q
-            else if (keyname.toLowerCase() === "q")
-            {
+                await displayTextRangeSmooth(indexLine + 1, maxLines, {smooth: false});
                 closeHelp();
             }
             // PAGE DOWN
