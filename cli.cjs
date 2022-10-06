@@ -32,36 +32,81 @@ program
         ]
     })
     .showHelpAfterError('(add --help for additional information)')
+    // .helpOption(false)
+    // .helpOption('-h, --help', 'Display help')
     .showSuggestionAfterError(true);
 
-program.parse();
+/**
+ *
+ * @type {Promise<boolean>}
+ */
+async function parseArgs()
+{
+    try
+    {
+        program.parse();
+
+        const filepath = program.args[0]
+
+        if (!fs.existsSync(filepath))
+        {
+            console.error(`Could not locate "${filepath}" from "${process.cwd()}"`)
+            return false
+        }
+
+        if (!fs.lstatSync(filepath).isFile())
+        {
+            console.error(`The path "${filepath}" is not a file`)
+            return false
+        }
+
+        const options = program.opts();
+
+        let content = fs.readFileSync(filepath, {encoding: "utf-8"})
+        await showHelp(content, {
+            windowTitle    : "❔" + " Help ",
+            topText        : "Press CTRL + C or Q to Quit | Page Down to scroll down | Any key to next line",
+            topTextBg      : "",
+            topTextReversed: true,
+            filepath,
+            ...options
+        });
+
+        return true;
+    }
+    catch (e)
+    {
+        console.error({lid: 4515}, e.message);
+    }
+
+    return false;
+
+}
 
 (async function ()
 {
-    const filepath = program.args[0]
-
-    if (!fs.existsSync(filepath))
+    try
     {
-        console.error(`Could not locate "${filepath}" from "${process.cwd()}"`)
-        return false
-    }
+        const helpIndex = process.argv.indexOf("--help") >= 0 || process.argv.indexOf("-h") >= 0
+        if (helpIndex)
+        {
+            const content = program.helpInformation()
+            await showHelp(content, {
+                windowTitle    : "❔" + " Help ",
+                topText        : "Press CTRL + C or Q to Quit | Page Down to scroll down | Any key to next line",
+                topTextBg      : "",
+                topTextReversed: true,
+            });
 
-    if (!fs.lstatSync(filepath).isFile())
+            return
+        }
+
+        await parseArgs()
+    }
+    catch (e)
     {
-        console.error(`The path "${filepath}" is not a file`)
-        return false
+        console.error({lid: 5643}, e.message);
+        process.exitCode = 17;
     }
+}());
 
-    const options = program.opts();
-
-    let content = fs.readFileSync(filepath, {encoding: "utf-8"})
-    await showHelp(content, {
-        windowTitle    : "❔" + " Help ",
-        topText        : "Press CTRL + C or Q to Quit | Page Down to scroll down | Any key to next line",
-        topTextBg      : "",
-        topTextReversed: true,
-        filepath,
-        ...options
-    });
-
-}())
