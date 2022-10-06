@@ -16,7 +16,7 @@ const getTerminalHeight = () =>
 
 const getTerminalWidth = () =>
 {
-    return terminalSize().cols
+    return terminalSize().columns
 };
 
 
