@@ -49,7 +49,8 @@ const wrap = (str, maxChars) => str.replace(
 
 const closeHelp = () =>
 {
-    process.stdout.write("\n\n");
+    process.stdout.write(toAnsi.RESET);
+    process.stdout.write("\n");
     process.exit();
 };
 
