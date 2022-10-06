@@ -33,7 +33,6 @@ program
     })
     .showHelpAfterError('(add --help for additional information)')
     // .helpOption(false)
-    // .helpOption('-h, --help', 'Display help')
     .showSuggestionAfterError(true);
 
 /**
@@ -87,10 +86,10 @@ async function parseArgs()
 {
     try
     {
-        const helpIndex = process.argv.indexOf("--help") >= 0 || process.argv.indexOf("-h") >= 0
+        const helpIndex = process.argv.indexOf("--help") >= 0 || process.argv.indexOf("-h") >= 0;
         if (helpIndex)
         {
-            const content = program.helpInformation()
+            const content = program.helpInformation();
             await showHelp(content, {
                 windowTitle    : "❔" + " Help ",
                 topText        : "Press CTRL + C or Q to Quit | Page Down to scroll down | Any key to next line",
@@ -98,7 +97,7 @@ async function parseArgs()
                 topTextReversed: true,
             });
 
-            return
+            return ;
         }
 
         await parseArgs()
