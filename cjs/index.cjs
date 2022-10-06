@@ -116,10 +116,7 @@ const displayLineIndex = (index = indexLine, {lineNumber = false, update = true}
     }
 
     const nLine = lineNumber ? index + ": " : "";
-    // process.stdout.write(nLine + text + toAnsi.RESET);
-    // process.stdout.write(toAnsi.RESET + nLine + text);
     process.stdout.write(nLine + text);
-    // process.stdout.write(index + ": " + text);
 
     update && setIndexLine(index);
 
