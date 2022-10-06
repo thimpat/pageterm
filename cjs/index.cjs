@@ -129,6 +129,14 @@ const displayLineIndex = (index = indexLine, {lineNumber = false, update = true}
     return index;
 };
 
+/**
+ * Display lines of text between index = start to index = end
+ * @param start
+ * @param end
+ * @param smooth
+ * @param lineNumber
+ * @returns {Promise<number>}
+ */
 const displayTextRangeSmooth = async (start, end, {smooth = smoothScrolling, lineNumber = false} = {}) =>
 {
     let isEnd = false;
@@ -174,19 +182,10 @@ const grabKey = () =>
             const keyname = "" + key;
             const terminalHeight = getTerminalHeight()
 
-            // CTRL-C
-            if (keyname === "\u0003")
+            // CTRL-C || ESC || Q
+            if (keyname === "\u0003" || keyname === "\u001B" || keyname.toLowerCase() === "q")
             {
-                closeHelp();
-            }
-            // ESC
-            else if (keyname === "\u001B")
-            {
-                closeHelp();
-            }
-            // Q
-            else if (keyname.toLowerCase() === "q")
-            {
+                await displayTextRangeSmooth(indexLine + 1, maxLines, {smooth: false});
                 closeHelp();
             }
             // PAGE DOWN
