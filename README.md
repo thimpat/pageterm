@@ -108,6 +108,15 @@ $> pageterm <filepath>
 
 ## Changelog
 
-*  Don't display top text when the console is big enough
+##### current:
+*  Restore the initial color on quitting
+*  Display content left on quitting
+*  Fix lines wrapped incorrectly
+
+
+##### 1.0.4:
+*  Don't display the top text when the console display is wide enough.
+
+
 
 ---
