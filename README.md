@@ -111,9 +111,9 @@ $> pageterm <filepath>
 📁 package                
 │
 └───📁 cjs
-│   │ 📝 index.cjs               ⇽ CJS version      - Node (10k unminified)
+│   │ 📝 index.cjs               ⇽ CJS version      - Node (9.6kB unminified)
 └───📁 dist
-│   │ 📝 index.mjs               ⇽ ESM version      - Node (10k unminified)
+│   │ 📝 index.mjs               ⇽ ESM version      - Node (9.7kB unminified)
 
 ```
 
