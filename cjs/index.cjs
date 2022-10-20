@@ -383,6 +383,13 @@ const showHelp = async (content, {
     process.stdout.write(toAnsi.RESET);
     await displayTextRangeSmooth(0, terminalHeight, {smooth: false});
 
+    if (!process.stdin.isTTY)
+    {
+        await displayTextRangeSmooth(indexLine + 1, maxLines, {smooth: false});
+        closeHelp();
+        return true;
+    }
+
     grabKey();
 };
 
