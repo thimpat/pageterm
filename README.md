@@ -124,6 +124,10 @@ $> pageterm <filepath>
 ## Changelog
 
 ##### current:
+*  Display entire help without interruption when TTY is not available
+
+
+##### 1.1.0:
 *  Display help with PageTerm
 *  Update code for the ESM file
 
